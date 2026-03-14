@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avisos Enfermería</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Avisos Enfermería">
+  <meta name="theme-color" content="#003366">
+  <link rel="manifest" href="#" id="manifest-placeholder">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #003366;
+      --azul-medio: #1a5276;
+      --amarillo: #f0b429;
+      --blanco: #ffffff;
+      --gris-claro: #f4f6f9;
+      --gris: #e0e4ea;
+      --texto: #1a2332;
+      --rojo: #e74c3c;
+      --verde: #27ae60;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--gris-claro);
+      min-height: 100vh;
+      color: var(--texto);
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--azul);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    .header-logo {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+
+    .header-text h1 {
+      color: var(--blanco);
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: 0.3px;
+    }
+
+    .header-text p {
+      color: var(--amarillo);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .urgencia-banner {
+      background: var(--rojo);
+      color: white;
+      text-align: center;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    /* FORM CONTAINER */
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .form-card {
+      background: var(--blanco);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .form-card-header {
+      background: linear-gradient(135deg, var(--azul-medio), var(--azul));
+      padding: 20px;
+      text-align: center;
+    }
+
+    .form-card-header h2 {
+      color: var(--blanco);
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .form-card-header p {
+      color: rgba(255,255,255,0.75);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .form-body {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* FIELDS */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-group label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--azul);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field-group label .icon {
+      font-size: 15px;
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--gris);
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      color: var(--texto);
+      background: var(--gris-claro);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      outline: none;
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px rgba(0,51,102,0.1);
+      background: var(--blanco);
+    }
+
+    .field-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* URGENCIA SELECTOR */
+    .urgencia-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .urgencia-btn {
+      padding: 12px 8px;
+      border: 2px solid var(--gris);
+      border-radius: 10px;
+      background: var(--gris-claro);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .urgencia-btn .emoji { font-size: 20px; display: block; margin-bottom: 4px; }
+    .urgencia-btn .label { font-size: 12px; font-weight: 700; color: var(--texto); }
+
+    .urgencia-btn.rutina.selected {
+      border-color: var(--verde);
+      background: #eafaf1;
+    }
+
+    .urgencia-btn.urgente.selected {
+      border-color: var(--rojo);
+      background: #fdf2f2;
+    }
+
+    /* SUBMIT */
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--amarillo);
+      color: var(--azul);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.3px;
+      margin-top: 4px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(240,180,41,0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* SUCCESS */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--verde);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+    }
+
+    .success-screen h2 {
+      color: var(--azul);
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .success-screen p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .btn-nuevo {
+      padding: 14px 32px;
+      background: var(--azul);
+      color: var(--blanco);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ERROR */
+    .error-msg {
+      background: #fdf2f2;
+      border: 1px solid #f5c6cb;
+      color: var(--rojo);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      display: none;
+    }
+
+    /* LOADING */
+    .loading {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0,51,102,0.3);
+      border-top-color: var(--azul);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 11px;
+      color: #999;
+    }
+
+    select option { font-size: 15px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <!-- Logo ILUNION en SVG inline -->
+    <svg class="header-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#003366"/>
+      <circle cx="50" cy="50" r="32" fill="none" stroke="#f0b429" stroke-width="8"/>
+      <circle cx="50" cy="50" r="14" fill="#f0b429"/>
+      <circle cx="50" cy="22" r="7" fill="white"/>
+    </svg>
+    <div class="header-text">
+      <h1>Avisos Enfermería</h1>
+      <p>Ilunion VidaSénior Parla</p>
+    </div>
+  </div>
+
+  <div class="urgencia-banner">
+    ⚠️ EN URGENCIAS: Avisa también verbalmente a enfermería
+  </div>
+
+  <div class="container">
+    <div class="form-card">
+      <div class="form-card-header">
+        <h2>📋 Registrar un Aviso</h2>
+        <p>Rellena todos los campos y pulsa Enviar</p>
+      </div>
+
+      <div class="form-body" id="formBody">
+
+        <!-- FECHA Y HORA -->
+        <div class="row-2">
+          <div class="field-group">
+            <label><span class="icon">📅</span> Fecha</label>
+            <input type="date" id="fecha" required>
+          </div>
+          <div class="field-group">
+            <label><span class="icon">🕐</span> Hora</label>
+            <input type="time" id="hora" required>
+          </div>
+        </div>
+
+        <!-- AUXILIAR -->
+        <div class="field-group">
+          <label><span class="icon">👤</span> Nombre de la Auxiliar</label>
+          <input type="text" id="auxiliar" placeholder="Tu nombre completo" required autocomplete="name">
+        </div>
+
+        <!-- RESIDENTE -->
+        <div class="field-group">
+          <label><span class="icon">🧓</span> Nombre del Residente</label>
+          <input type="text" id="residente" placeholder="Nombre del residente" required>
+        </div>
+
+        <!-- UBICACION -->
+        <div class="field-group">
+          <label><span class="icon">📍</span> Ubicación / Módulo</label>
+          <select id="ubicacion" required>
+            <option value="">— Selecciona —</option>
+            <option value="Módulo 1 - Psico">Módulo 1 - Psico</option>
+            <option value="Módulo 2">Módulo 2</option>
+            <option value="Módulo 3">Módulo 3</option>
+            <option value="Módulo 4">Módulo 4</option>
+            <option value="Módulo 5">Módulo 5</option>
+            <option value="Módulo 6">Módulo 6</option>
+            <option value="Módulo 7">Módulo 7</option>
+            <option value="Módulo 8">Módulo 8</option>
+            <option value="Módulo 9">Módulo 9</option>
+            <option value="Principal">Principal</option>
+            <option value="Planta Primera">Planta Primera</option>
+            <option value="Planta Segunda">Planta Segunda</option>
+          </select>
+        </div>
+
+        <!-- TIPO DE AVISO -->
+        <div class="field-group">
+          <label><span class="icon">🔔</span> Tipo de Aviso</label>
+          <select id="tipoAviso" required>
+            <option value="">— Selecciona —</option>
+            <option value="Caída">Caída</option>
+            <option value="Cambio de estado">Cambio de estado</option>
+            <option value="Conducta alterada">Conducta alterada</option>
+            <option value="Problema con medicación">Problema con medicación</option>
+            <option value="Herida">Herida</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <!-- NIVEL URGENCIA -->
+        <div class="field-group">
+          <label><span class="icon">🚨</span> Nivel de Urgencia</label>
+          <div class="urgencia-options">
+            <div class="urgencia-btn rutina" id="btnRutina" onclick="selectUrgencia('Rutina')">
+              <span class="emoji">🟢</span>
+              <span class="label">Rutina</span>
+            </div>
+            <div class="urgencia-btn urgente" id="btnUrgente" onclick="selectUrgencia('Urgente')">
+              <span class="emoji">🔴</span>
+              <span class="label">Urgente</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DESCRIPCION -->
+        <div class="field-group">
+          <label><span class="icon">📝</span> Descripción de lo Observado</label>
+          <textarea id="descripcion" placeholder="Describe detalladamente lo que has observado..." required></textarea>
+        </div>
+
+        <!-- ERROR -->
+        <div class="error-msg" id="errorMsg">⚠️ Por favor, rellena todos los campos antes de enviar.</div>
+
+        <!-- BOTON -->
+        <button class="btn-submit" id="btnEnviar" onclick="enviarAviso()">
+          Enviar Aviso a Enfermería
+        </button>
+
+      </div>
+
+      <!-- PANTALLA ÉXITO -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">✅</div>
+        <h2>¡Aviso registrado!</h2>
+        <p>El aviso ha sido enviado correctamente.<br>Enfermería ya tiene la información.</p>
+        <button class="btn-nuevo" onclick="nuevoAviso()">Registrar otro aviso</button>
+      </div>
+
+    </div>
+
+    <p class="footer-note">Ilunion VidaSénior Parla · Sistema de Comunicación Interna · 2026</p>
+  </div>
+
+  <script>
+    // ─── CONFIGURA AQUÍ tu URL de Apps Script ───────────────────────
+    const APPS_SCRIPT_URL = "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT";
+    // ────────────────────────────────────────────────────────────────
+
+    let urgenciaSeleccionada = "";
+
+    // Pone fecha y hora actuales al cargar
+    window.onload = function() {
+      const ahora = new Date();
+      document.getElementById("fecha").value = ahora.toISOString().split("T")[0];
+      const hh = String(ahora.getHours()).padStart(2,"0");
+      const mm = String(ahora.getMinutes()).padStart(2,"0");
+      document.getElementById("hora").value = hh + ":" + mm;
+    };
+
+    function selectUrgencia(tipo) {
+      urgenciaSeleccionada = tipo;
+      document.getElementById("btnRutina").classList.toggle("selected", tipo === "Rutina");
+      document.getElementById("btnUrgente").classList.toggle("selected", tipo === "Urgente");
+    }
+
+    function enviarAviso() {
+      const fecha = document.getElementById("fecha").value;
+      const hora = document.getElementById("hora").value;
+      const auxiliar = document.getElementById("auxiliar").value.trim();
+      const residente = document.getElementById("residente").value.trim();
+      const ubicacion = document.getElementById("ubicacion").value;
+      const tipoAviso = document.getElementById("tipoAviso").value;
+      const descripcion = document.getElementById("descripcion").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+
+      if (!fecha || !hora || !auxiliar || !residente || !ubicacion || !tipoAviso || !urgenciaSeleccionada || !descripcion) {
+        errorMsg.style.display = "block";
+        errorMsg.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      errorMsg.style.display = "none";
+
+      const btn = document.getElementById("btnEnviar");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading"></span> Enviando...';
+
+      const datos = { fecha, hora, auxiliar, residente, ubicacion, tipoAviso, urgencia: urgenciaSeleccionada, descripcion };
+
+      // Si no hay URL configurada aún, simula éxito para pruebas
+      if (APPS_SCRIPT_URL === "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT") {
+        setTimeout(() => mostrarExito(), 1200);
+        return;
+      }
+
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(datos)
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.result === "ok") mostrarExito();
+        else mostrarError();
+      })
+      .catch(() => mostrarError());
+    }
+
+    function mostrarExito() {
+      document.getElementById("formBody").style.display = "none";
+      document.getElementById("successScreen").style.display = "block";
+      document.getElementById("successScreen").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function mostrarError() {
+      const btn = document.getElementById("btnEnviar");
+      btn.disabled = false;
+      btn.innerHTML = "Enviar Aviso a Enfermería";
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.textContent = "❌ Error al enviar. Comprueba la conexión e inténtalo de nuevo.";
+      errorMsg.style.display = "block";
+    }
+
+    function nuevoAviso() {
+      document.getElementById("successScreen").style.display = "none";
+      document.getElementById("formBody").style.display = "flex";
+      document.getElementById("auxiliar").value = "";
+      document.getElementById("residente").value = "";
+      document.getElementById("ubicacion").value = "";
+      document.getElementById("tipoAviso").value = "";
+      document.getElementById("descripcion").value = "";
+      urgenciaSeleccionada = "";
+      document.getElementById("btnRutina").classList.remove("selected");
+      document.getElementById("btnUrgente").classList.remove("selected");
+      const btn = document.getElementById("btnEnviar");
+      btn.disabled = false;
+      btn.innerHTML = "Enviar Aviso a Enfermería";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+
+</body>
+</html>
