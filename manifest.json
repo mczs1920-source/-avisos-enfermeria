@@ -1,0 +1,20 @@
+{
+  "name": "Avisos Enfermería",
+  "short_name": "Avisos",
+  "start_url": "/avisos-enfermeria%20NUEVO.html",
+  "display": "standalone",
+  "background_color": "#003366",
+  "theme_color": "#003366",
+  "icons": [
+    {
+      "src": "LOGO_ILUNION.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "LOGO_ILUNION.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
